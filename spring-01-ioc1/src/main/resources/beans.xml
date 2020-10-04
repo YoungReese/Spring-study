@@ -16,6 +16,7 @@
 
     <!--service-->
     <bean id="userServiceImpl" class="com.ly.service.UserServiceImpl">
+        <!-- ref: 引用Spring容器中创建好的对象 -->
         <property name="userDao" ref="oracleImpl"/>
     </bean>
 

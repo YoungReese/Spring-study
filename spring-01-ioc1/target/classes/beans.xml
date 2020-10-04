@@ -5,7 +5,7 @@
         https://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
 
-    <!--在学习完spring-02-hellospring后改造前民的代码，使用ioc方式创建对象-->
+    <!--在学习完spring-02-hellospring后改造前面的代码，使用ioc方式创建对象-->
 
     <!--dao-->
     <bean id="daoImpl" class="com.ly.dao.UserDaoImpl"/>
@@ -16,6 +16,7 @@
 
     <!--service-->
     <bean id="userServiceImpl" class="com.ly.service.UserServiceImpl">
+        <!-- ref: 引用Spring容器中创建好的对象 -->
         <property name="userDao" ref="oracleImpl"/>
     </bean>
 

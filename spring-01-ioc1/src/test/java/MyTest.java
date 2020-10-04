@@ -31,6 +31,7 @@ public class MyTest {
 
 
 
+        // 学习完spring-02-hellospring后来改造上述代码  
         // 改造后test with Spring
         // 获取ApplicationContext，拿到Spring的容器
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
