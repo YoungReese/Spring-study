@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--constructor-based DI-->
+
+
+
+
+    <!--第3种，参数名称赋值，推荐-->
+    <bean id="user" class="com.ly.pojo.User">
+        <constructor-arg name="name" value="ly学spring3"/>
+        <constructor-arg name="str" value="hello world3"/>
+    </bean>
+
+
+
+<!--    &lt;!&ndash;第2种，参数类型赋值，不建议使用，当参数类型一致时，自己容易搞混淆&ndash;&gt;-->
+<!--    <bean id="user" class="com.ly.pojo.User">-->
+<!--        <constructor-arg type="java.lang.String" value="liyang学Spring2"/>-->
+<!--        <constructor-arg type="java.lang.String" value="hello world2"/>-->
+<!--    </bean>-->
+
+
+
+<!--    &lt;!&ndash;第1种，下标赋值（ parameters: The index is 0-based ）&ndash;&gt;-->
+<!--    <bean id="user" class="com.ly.pojo.User">-->
+<!--        <constructor-arg index="0" value="菜鸟学Spring"/>-->
+<!--        <constructor-arg index="1" value="hello world"/>-->
+<!--    </bean>-->
+
+
+
+<!--    &lt;!&ndash;默认使用无参构造函数的方式&ndash;&gt;-->
+<!--    <bean id="user" class="com.ly.pojo.User">-->
+<!--        <property name="name" value="liyang"/>-->
+<!--    </bean>-->
+
+</beans>
