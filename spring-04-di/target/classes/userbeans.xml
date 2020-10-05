@@ -5,8 +5,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!--使用p命名空间注入方式，可以直接注入属性的值：需要有构造器-->
-    <bean id="user2" class="com.ly.pojo.User" c:name="c-namespace: liyang" c:age="18"/>
+    <!--使用c命名空间注入方式，可以直接注入属性的值：需要有构造器-->
+    <bean id="user2" class="com.ly.pojo.User" c:name="c-namespace: liyang" c:age="18" scope="prototype"/>
 
 
     <!--使用p命名空间注入方式，可以直接注入属性的值：property，需要有set函数-->

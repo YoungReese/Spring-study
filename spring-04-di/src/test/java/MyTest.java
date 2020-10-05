@@ -38,6 +38,8 @@ public class MyTest {
         // 使用以下方式，在getBean的时候，直接告诉容器，返回什么类型，可以避免强转
         User user = context.getBean("user2", User.class);
         System.out.println(user);
+        User user2 = context.getBean("user2", User.class);
+        System.out.println(user == user2);
     }
 }
 

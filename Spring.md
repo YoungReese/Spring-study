@@ -126,3 +126,10 @@ c-namespace：依赖构造器
 
 
 注意：不能直接使用，需要的时候去导入，官网直接拿即可。
+
+
+
+#### 6.4 bean的作用域
+
+![image-20201006000810670](../../../../Library/Application Support/typora-user-images/image-20201006000810670.png)
+
