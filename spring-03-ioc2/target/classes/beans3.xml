@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+    阅读方式：配合测试类进行阅读
+    测试类阅读从上向下读
+    beans.xml配置文件从下向上读
+    -->
+
+
+    <!--import配置，一般用于团队开发使用，它可以将多个配置文件，倒入合并为一个
+
+    -->
+
+
+
+    <!--bean配置总结，这里对UserAlias进行改造，优先掌握以下几个
+    id：bean的唯一标识符，也就是相当于我们学过的对象名（放在Spring容器中的对象名）
+    class：bean对象所对应的全限定名：包名 + 类型名
+    name：也是别名，而且name更高级们可以同时取多个别名
+    scope：默认是单例
+    ...
+    -->
+    <bean id="userAlias" class="com.ly.pojo.UserAlias" name="userAlias2,userAlias3" scope="singleton">
+        <constructor-arg name="name" value="UserAlias-ly"/>
+    </bean>
+    <!--使用了别名，也可以通过别名来获取到这个对象-->
+    <alias name="userAlias" alias="alias"/>
+
+
+
+
+    <!--    &lt;!&ndash;别名配置，测试alias，为userAlias创建一个别名&ndash;&gt;-->
+    <!--    <bean id="userAlias" class="com.ly.pojo.UserAlias">-->
+    <!--        <constructor-arg name="name" value="UserAlias-ly"/>-->
+    <!--    </bean>-->
+    <!--    &lt;!&ndash;使用了别名，也可以通过别名来获取到这个对象&ndash;&gt;-->
+    <!--    <alias name="userAlias" alias="alias"/>-->
+
+
+
+
+
+
+    <!--constructor-based DI-->
+
+    <!--第3种，参数名称赋值，推荐-->
+    <bean id="user" class="com.ly.pojo.User">
+        <constructor-arg name="name" value="ly学spring3"/>
+        <constructor-arg name="str" value="hello world3"/>
+    </bean>
+
+
+
+    <!--    &lt;!&ndash;第2种，参数类型赋值，不建议使用，当参数类型一致时，自己容易搞混淆&ndash;&gt;-->
+    <!--    <bean id="user" class="com.ly.pojo.User">-->
+    <!--        <constructor-arg type="java.lang.String" value="liyang学Spring2"/>-->
+    <!--        <constructor-arg type="java.lang.String" value="hello world2"/>-->
+    <!--    </bean>-->
+
+
+
+    <!--    &lt;!&ndash;第1种，下标赋值（ parameters: The index is 0-based ）&ndash;&gt;-->
+    <!--    <bean id="user" class="com.ly.pojo.User">-->
+    <!--        <constructor-arg index="0" value="菜鸟学Spring"/>-->
+    <!--        <constructor-arg index="1" value="hello world"/>-->
+    <!--    </bean>-->
+
+
+
+    <!--    &lt;!&ndash;默认使用无参构造函数的方式&ndash;&gt;-->
+    <!--    <bean id="user" class="com.ly.pojo.User">-->
+    <!--        <property name="name" value="liyang"/>-->
+    <!--    </bean>-->
+
+</beans>

@@ -16,7 +16,7 @@
 
     <!--service-->
     <bean id="userServiceImpl" class="com.ly.service.UserServiceImpl">
-        <!-- ref: 引用Spring容器中创建好的对象 -->
+        <!-- ref: 引用Spring容器中创建好的对象，这是使用set函数实现注入的setter-based DI -->
         <property name="userDao" ref="oracleImpl"/>
     </bean>
 

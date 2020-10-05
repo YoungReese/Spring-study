@@ -1,0 +1,15 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+    import配置，一般用于团队开发使用，它可以将多个配置文件，倒入合并为一个
+    把beans.xml beans2.xml beans3.xml这三个由三个开发人员开发的配置文件
+    合并到了当前applicationContext.xml文件中，从而对外提供这一个xml文件即可
+    -->
+    <!---->
+    <import resource="beans.xml"/>
+    <import resource="beans2.xml"/>
+<!--    <import resource="beans3.xml"/>-->
+
+</beans>
