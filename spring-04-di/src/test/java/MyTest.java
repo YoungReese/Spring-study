@@ -1,10 +1,22 @@
 import com.ly.pojo.Student;
+import com.ly.pojo.User;
+import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * liyang 2020-10-05
  * 对常用注入方式的测试
+ *
+ * 注入方式：
+ * 1、构造器注入
+ *
+ * 2、set注入
+ *
+ * 3、拓展注入（相对于上述注入，在xml文件中需要引入相关约束）
+ * p-namespace注入对应set注入，需要由set函数
+ * c-namespace注入对应construct注入，需要有构造函数
+ *
  */
 public class MyTest {
     public static void main(String[] args) {
@@ -16,6 +28,16 @@ public class MyTest {
 
         System.out.println();
         System.out.println(student.toString()); // mark
+    }
+
+
+    // 测试p-namespace或者c-namespace注入
+    @Test
+    public void test2() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("userbeans.xml");
+        // 使用以下方式，在getBean的时候，直接告诉容器，返回什么类型，可以避免强转
+        User user = context.getBean("user2", User.class);
+        System.out.println(user);
     }
 }
 
