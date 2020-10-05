@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="cat" class="com.ly.pojo.Cat">
+    </bean>
+
+    <bean id="dog" class="com.ly.pojo.Dog">
+    </bean>
+
+
+<!--    &lt;!&ndash;原始配置方式&ndash;&gt;-->
+<!--    <bean id="people" class="com.ly.pojo.People">-->
+<!--        <property name="name" value="some one"/>-->
+<!--        <property name="cat" ref="cat"/>-->
+<!--        <property name="dog" ref="dog"/>-->
+<!--    </bean>-->
+
+    <!--使用autowired配置方式-->
+
+    <!--
+    byName：会自动在容器的上下文中进行查找和自己set方法后面的值对应的bean-id！（名字要对应，且id要小写）
+    byType：会自动在容器的上下文中进行查找和自己对象属性类型相同的bean！（需要类型全局唯一，bean id可以省略）
+    -->
+    <bean id="people" class="com.ly.pojo.People" autowire="byName">
+        <property name="name" value="some one"/>
+    </bean>
+
+
+
+</beans>

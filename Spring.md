@@ -133,3 +133,72 @@ c-namespace：依赖构造器
 
 ![image-20201006000810670](../../../../Library/Application Support/typora-user-images/image-20201006000810670.png)
 
+
+
+### 7 Bean的自动装配
+
+*   自动装配是Spring满足bean依赖的一种方式
+*   spring会在上下文中自动寻找，并自动bean装配属性
+
+
+
+在Spring 中有三种装配的方式
+
+1.在xml文件中显示的装配
+
+2.在java中显示装配
+
+3.隐式的自动装配
+
+
+
+#### 7.1 测试
+
+环境搭建：一个人有两个宠物
+
+
+
+#### 7.2 byName自动装配
+
+```xml
+	<bean id="cat" class="com.ly.pojo.Cat">
+    </bean>
+
+    <bean id="dog" class="com.ly.pojo.Dog">
+    </bean>
+
+<!--
+    byName：会自动在容器的上下文中进行查找和自己set方法后面的值对应的bean-id！（名字要对应，且id要小写）
+    -->
+    <bean id="people" class="com.ly.pojo.People" autowire="byName">
+        <property name="name" value="some one"/>
+    </bean>
+```
+
+#### 7.3 byType自动装配
+
+```xml
+	<bean id="cat" class="com.ly.pojo.Cat">
+    </bean>
+
+    <bean class="com.ly.pojo.Dog">
+    </bean>
+<!--
+    byName：会自动在容器的上下文中进行查找和自己set方法后面的值对应的bean-id！（名字要对应，且id要小写）
+    byType：会自动在容器的上下文中进行查找和自己对象属性类型相同的bean！（需要类型全局唯一，bean id可以省略）
+    -->
+    <bean id="people" class="com.ly.pojo.People" autowire="byType">
+        <property name="name" value="some one"/>
+    </bean>
+```
+
+小结：
+
+*   byName的时候，需要保证所有bean的id唯一，并且这个bean需要和自动注入的属性的set方法后面的值会一致（且id要小写）
+*   byType的时候，需要保证所有bean的class唯一，并且这个bean需要和自动注入的属性的类型一致！
+
+
+
+
+
+#### 7.4 使用注解实现自动装配
