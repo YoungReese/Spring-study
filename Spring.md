@@ -197,8 +197,377 @@ c-namespace：依赖构造器
 *   byName的时候，需要保证所有bean的id唯一，并且这个bean需要和自动注入的属性的set方法后面的值会一致（且id要小写）
 *   byType的时候，需要保证所有bean的class唯一，并且这个bean需要和自动注入的属性的类型一致！
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="cat" class="com.ly.pojo.Cat"/>
+    <bean id="dog" class="com.ly.pojo.Dog"/>
+
+
+<!--    &lt;!&ndash;原始配置方式&ndash;&gt;-->
+<!--    <bean id="people" class="com.ly.pojo.People">-->
+<!--        <property name="name" value="some one"/>-->
+<!--        <property name="cat" ref="cat"/>-->
+<!--        <property name="dog" ref="dog"/>-->
+<!--    </bean>-->
+
+    <!--使用autowired配置方式-->
+    <!--
+    byName：会自动在容器的上下文中进行查找和自己set方法后面的值对应的bean-id！（名字要对应，且id要小写）
+    byType：会自动在容器的上下文中进行查找和自己对象属性类型相同的bean！（需要类型全局唯一，bean id可以省略）
+    -->
+    <bean id="people" class="com.ly.pojo.People" autowire="byName">
+        <property name="name" value="some one"/>
+    </bean>
+
+</beans>
+```
+
 
 
 
 
 #### 7.4 使用注解实现自动装配
+
+jdk 1.5支持注解，Spring2.5支持注解
+
+The introduction of annotation-based configuration raised the question of whether this approach is “better” than XML. 
+
+使用注解须知：
+
+1、导入约束（context约束）：xmlns:context="http://www.springframework.org/schema/context"
+
+2、配置注解的支持：<context:annotation-config/>
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+</beans>
+```
+
+**@Autowired**
+
+直接在属性上使用即可，也可以在方法上使用（由于注解采用反射实现，可以没有set函数，所以建议放在属性上）
+
+使用Autowired我们可以不用编写set方法，前提是你这个自动装配的属性在IOC（Spring）容器中存在，因为默认request参数为true
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--开启注解的支持-->
+    <context:annotation-config/>
+
+    <bean id="cat" class="com.ly.pojo.Cat"/>
+    <bean id="dog" class="com.ly.pojo.Dog"/>
+    <bean id="people" class="com.ly.pojo.People"/>
+
+</beans>
+```
+
+注解通过反射实现，可以没有set方法
+
+```java
+package com.ly.pojo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class People {
+    @Autowired
+    private Cat cat;
+    @Autowired
+    private Dog dog;
+    private String name;
+
+    public Cat getCat() {
+        return cat;
+    }
+
+    public Dog getDog() {
+        return dog;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "People{" +
+                "cat=" + cat +
+                ", dog=" + dog +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}
+```
+
+
+
+```java
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Autowired {
+
+	/**
+	 * Declares whether the annotated dependency is required.
+	 * <p>Defaults to {@code true}.
+	 */
+	boolean required() default true;
+
+}
+```
+
+
+
+
+
+
+
+
+
+测试Autowired(required = false)的情况，正常运行，不会报错
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--开启注解的支持-->
+    <context:annotation-config/>
+
+<!--    <bean id="cat" class="com.ly.pojo.Cat"/>-->
+    <bean id="dog" class="com.ly.pojo.Dog"/>
+    <bean id="people" class="com.ly.pojo.People"/>
+
+</beans>
+```
+
+```java
+package com.ly.pojo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class People {
+    // 如果显示定义了Autowired的required属性为false，如果有直接注入，没有则表示忽略当前要注入的bean，跳过，不会报错
+    @Autowired(required = false)
+    private Cat cat;
+    @Autowired
+    private Dog dog;
+    private String name;
+
+    public Cat getCat() {
+        return cat;
+    }
+
+    public Dog getDog() {
+        return dog;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "People{" +
+                "cat=" + cat +
+                ", dog=" + dog +
+                ", name='" + name + '\'' +
+                '}';
+    }
+}
+```
+
+```java
+import com.ly.pojo.People;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * liyang 2020-10-06
+ */
+
+public class MyTest {
+    @Test
+    public void test1() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+
+        People people = context.getBean("people", People.class);
+
+        System.out.println(people.toString());
+//        people.getCat().shout(); // 这里注释掉是因为这里测试加载情况，加载测试成功，但是使用则会出错，因为实际没有注入
+//        people.getDog().shout();
+    }
+}
+```
+
+
+
+如果@Autowired自动装配的环境比较复杂，自动装配无法通过一个注解【@Autowired】完成的时候，我们可以使用@Qualifier(value = "xxx")去配和@Autowired的使用，指定一个唯一的bean对象注入！
+
+```java
+	@Autowired
+    @Qualifier(value = "dog1") // 如果容器中有多个这样的对象，且没有dog时，它会分不清，这时候指定一个
+    private Dog dog;
+```
+
+```xml
+<!--    <bean id="dog" class="com.ly.pojo.Dog"/>-->	
+	<bean id="dog1" class="com.ly.pojo.Dog"/>
+    <bean id="dog2" class="com.ly.pojo.Dog"/>
+```
+
+
+
+
+
+@Resource是jdk的原生注解，可以实现@Autowired的功能
+
+```java
+@Autowired
+    @Qualifier(value = "dog1") // 如果容器中有多个这样的对象，且没有dog时，它会分不清，这时候指定一个
+    private Dog dog;
+```
+
+等价于
+
+```java
+	@Resource(name = "dog1")
+    private Dog dog;
+    private String name;
+```
+
+
+
+小结：@Autowired【常用】和@Resource
+
+*   名字有符合的，可以通过名字找（对象名字）
+*   名字不符合，可以通过类型找（前提是类型对象只有一个，否则不知道该使用哪一个）
+*   情况复杂，没有相同的名字且有多个对象，可以使用@Qualifier(value = "dog1")指定（@Autowired方式）或者使用@Resource(name = "dog1")（@Resource直接使用那么指定）
+
+@Resource源码
+
+```java
+@Target({TYPE, FIELD, METHOD})
+@Retention(RUNTIME)
+public @interface Resource {
+    /**
+     * The JNDI name of the resource.  For field annotations,
+     * the default is the field name.  For method annotations,
+     * the default is the JavaBeans property name corresponding
+     * to the method.  For class annotations, there is no default
+     * and this must be specified.
+     */
+    String name() default "";
+
+    /**
+     * The name of the resource that the reference points to. It can
+     * link to any compatible resource using the global JNDI names.
+     *
+     * @since Common Annotations 1.1
+     */
+
+    String lookup() default "";
+
+    /**
+     * The Java type of the resource.  For field annotations,
+     * the default is the type of the field.  For method annotations,
+     * the default is the type of the JavaBeans property.
+     * For class annotations, there is no default and this must be
+     * specified.
+     */
+    Class<?> type() default java.lang.Object.class;
+
+    /**
+     * The two possible authentication types for a resource.
+     */
+    enum AuthenticationType {
+            CONTAINER,
+            APPLICATION
+    }
+
+    /**
+     * The authentication type to use for this resource.
+     * This may be specified for resources representing a
+     * connection factory of any supported type, and must
+     * not be specified for resources of other types.
+     */
+    AuthenticationType authenticationType() default AuthenticationType.CONTAINER;
+
+    /**
+     * Indicates whether this resource can be shared between
+     * this component and other components.
+     * This may be specified for resources representing a
+     * connection factory of any supported type, and must
+     * not be specified for resources of other types.
+     */
+    boolean shareable() default true;
+
+    /**
+     * A product specific name that this resource should be mapped to.
+     * The name of this resource, as defined by the <code>name</code>
+     * element or defaulted, is a name that is local to the application
+     * component using the resource.  (It's a name in the JNDI
+     * <code>java:comp/env</code> namespace.)  Many application servers
+     * provide a way to map these local names to names of resources
+     * known to the application server.  This mapped name is often a
+     * <i>global</i> JNDI name, but may be a name of any form. <p>
+     *
+     * Application servers are not required to support any particular
+     * form or type of mapped name, nor the ability to use mapped names.
+     * The mapped name is product-dependent and often installation-dependent.
+     * No use of a mapped name is portable.
+     */
+    String mappedName() default "";
+
+    /**
+     * Description of this resource.  The description is expected
+     * to be in the default language of the system on which the
+     * application is deployed.  The description can be presented
+     * to the Deployer to help in choosing the correct resource.
+     */
+    String description() default "";
+}
+```
+
+
+
+**@Nollable 字段标记了这个注解，说明这个字段也可以为null**
+

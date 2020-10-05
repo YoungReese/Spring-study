@@ -15,7 +15,7 @@ public class MyTest {
         People people = context.getBean("people", People.class);
 
         System.out.println(people.toString());
-        people.getCat().shout();
-        people.getDog().shout();
+//        people.getCat().shout(); // 这里注释掉是因为这里测试加载情况，加载测试成功，但是使用则会出错，因为实际没有注入
+//        people.getDog().shout();
     }
 }
