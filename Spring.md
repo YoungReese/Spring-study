@@ -650,6 +650,7 @@ public class User {
 *   dao【@Repository】
 *   service【@Service】
 *   controller【@Controller】
+*   pojo【@Component】
 
 这四个注解功能都是一样的，都是代表将某个类注册到Spring中，装配bean
 
@@ -724,4 +725,133 @@ xml与注解：
 ```
 
 
+
+### 9 使用Java的方式配置【完全不使用xml文件实现注入】
+
+我们现在要完全不使用Spring的xml配置了，全权交给Java来做！
+
+JavaConfig是Spring的一个子项目，在Spring4之后
+
+
+
+官方文档
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MyService myService() {
+        return new MyServiceImpl();
+    }
+}
+```
+
+```xml
+<beans>
+    <bean id="myService" class="com.acme.services.MyServiceImpl"/>
+</beans>
+```
+
+【@Configuration源码】
+
+```java
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Configuration {
+    @AliasFor(
+        annotation = Component.class
+    )
+    String value() default "";
+
+    boolean proxyBeanMethods() default true;
+}
+```
+
+@Configuration标记的类表示是一个配置类，就和我们之前看的beans.xml一样
+
+
+
+
+
+**原来通过xml配置方式使用的是ClassPathXmlApplicationContext，现在使用AnnotationConfigApplicationContext**
+
+![image-20201006181113644](Spring.assets/image-20201006181113644.png)
+
+
+
+
+
+
+
+【案例】
+
+```java
+package com.ly.config;
+
+import com.ly.pojo.User;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+// @Configuration标记的类表示是一个配置类，就和我们之前看的beans.xml一样
+// 这个也会被Spring容器托管，注册到容器中，因为它本来也是一个@Component（点进去看下源码可知）
+@Configuration
+@ComponentScan("com.ly.pojo") // 显示的去扫描，不扫描在测试的时候也通过了，但建议使用，规范化
+@Import(LYConfig2.class) // 如果多个配置类配置类使用@Import组合到这里，这样对外提供这一个即可
+public class LYConfig {
+
+    // 这里注册一个bean，相当于我们之前写的一个bean标签
+    // 这个方法的名字，相当于bean标签中的id属性
+    // 这个方法的返回值，就相当于bean标签中的class属性
+    @Bean
+    public User myUser() {
+        return new User(); // 这个User对象就是要注入到bean的对象！
+    }
+
+}
+```
+
+```java
+package com.ly.config;
+
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class LYConfig2 {
+}
+```
+
+```java
+import com.ly.config.LYConfig;
+import com.ly.pojo.User;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+/**
+ * liyang 2020-10-06
+ * 测试使用JavaConfig实现配置
+ *
+ * 使用AnnotationConfigApplicationContext，在使用getBean的时候需要使用方法名
+ */
+
+
+public class MyTest {
+    public static void main(String[] args) {
+        // 完全使用配置类的方式去实现注入，我们就只能通过AnnotationConfigContext来获取容器，通过配置类的class对象加载！
+        ApplicationContext context = new AnnotationConfigApplicationContext(LYConfig.class);
+        User user = (User) context.getBean("myUser"); // myUser是java配置类中的方法名
+        System.out.println(user.getName());
+    }
+}
+```
+
+这种纯Java的配置方式，在SpringBoot中随处可见！
+
+以下红框就是默认创建一个springboot项目
+
+![image-20201006184614981](Spring.assets/image-20201006184614981.png)
 
