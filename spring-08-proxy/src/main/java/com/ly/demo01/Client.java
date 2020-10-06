@@ -1,6 +1,9 @@
 package com.ly.demo01;
 
 /**
+ * liyang 2020-10-06
+ * 客户端测试
+ *
  * 租房子的人
  */
 public class Client {

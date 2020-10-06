@@ -995,5 +995,133 @@ public interface Rent {
 
 
 
+
+
+#### 10.2 静态代理：案例2-增删改查（然后通过使用代理增加一个打印日志功能）
+
+```java
+package com.ly.demo02;
+
+public interface UserService {
+    void creat();
+    void retrieve();
+    void update();
+    void delete();
+}
+```
+
+```java
+package com.ly.demo02;
+
+/**
+ * 真是角色
+ */
+public class UserServiceImpl implements UserService {
+
+    public void creat() {
+        System.out.println("增加了一个用户");
+    }
+
+    public void retrieve() {
+        System.out.println("查询了一个用户啊");
+    }
+
+    public void update() {
+        System.out.println("更新了一个用户");
+    }
+
+    public void delete() {
+        System.out.println("删除了一个用户");
+    }
+}
+```
+
+```java
+package com.ly.demo02;
+
+public class UserServiceProxy implements UserService {
+
+    private UserServiceImpl userService;
+
+    public UserServiceProxy() {
+    }
+
+    public UserServiceProxy(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    // Spring建议使用set方法注入进来，因为一份代理，可以多次使用
+    public void setUserService(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    public void creat() {
+        log("creat");
+        userService.creat();
+    }
+
+    public void retrieve() {
+        log("retrieve");
+        userService.retrieve();
+    }
+
+    public void update() {
+        log("update");
+        userService.update();
+    }
+
+    public void delete() {
+        log("delete");
+        userService.delete();
+    }
+
+    // 增加一个打印日志的方法
+    public void log(String msg) {
+        System.out.println("[Debug] 使用了" + msg + "方法");
+    }
+
+
+    // 记住：在没有充足了解公司原有的业务代码情况下，改动它是大忌！
+    //      即使完全了解，在没有清晰的规划下，也不要去修改！
+}
+```
+
+```java
+package com.ly.demo02;
+
+/**
+ * liyang 2020-10-06
+ * 客户端测试
+ */
+
+public class Client {
+    public static void main(String[] args) {
+        UserServiceImpl userService = new UserServiceImpl();
+        userService.creat();
+        userService.retrieve();
+        userService.update();
+        userService.delete();
+        System.out.println();
+
+        // 使用代理类增加了一个打印日志的方法且不修改原有的代码
+        UserServiceProxy userServiceProxy = new UserServiceProxy();
+        userServiceProxy.setUserService(userService);
+        userServiceProxy.creat();
+        userServiceProxy.retrieve();
+        userServiceProxy.update();
+        userServiceProxy.delete();
+
+    }
+}
+```
+
+
+
+![image-20201006223350539](Spring.assets/image-20201006223350539.png)
+
+
+
+
+
 ### 11 AOP
 
