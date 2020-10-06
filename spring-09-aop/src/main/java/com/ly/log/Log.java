@@ -4,6 +4,11 @@ import org.springframework.aop.MethodBeforeAdvice;
 
 import java.lang.reflect.Method;
 
+/**
+ * 方式1：使用Spring的API接口
+ * 前置通知
+ */
+
 public class Log implements MethodBeforeAdvice {
     // method: 要执行的目标对象的方法
     // args: 参数

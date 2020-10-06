@@ -1164,7 +1164,7 @@ java.lang.reflect.InvocationHandler
 
 ### 11 AOP
 
-#### 11.1、什么是AOP
+#### 11.1 什么是AOP
 
 ![image-20201007023516460](Spring.assets/image-20201007023516460.png)
 
@@ -1174,7 +1174,7 @@ java.lang.reflect.InvocationHandler
 
 
 
-#### 11.2、 AOP在Spring中的作用
+#### 11.2 AOP在Spring中的作用
 
 ![image-20201007024005442](Spring.assets/image-20201007024005442.png)
 
@@ -1196,11 +1196,11 @@ java.lang.reflect.InvocationHandler
 
 *   方式1：使用Spring的API接口【主要是SpringAPI接口实现，稍复杂，但是功能强大，因为可以获取被代理类的方法】
 *   方式2：使用自定义类来实现【主要是切面定义，简单】
-*   方式3：使用注解实现【】
+*   方式3：使用注解实现【在代码层面看的更加直观！也比较简单】
 
 
 
-【重点】使用AOP织入，需要导入一个依赖包！
+【重点】使用AOP织入，需要导入2个依赖包！
 
 ```xml
 <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
@@ -1212,7 +1212,16 @@ java.lang.reflect.InvocationHandler
 </dependency>
 ```
 
-导入aop包
+```xml
+<!-- https://mvnrepository.com/artifact/aspectj/aspectjrt -->
+<dependency>
+    <groupId>aspectj</groupId>
+    <artifactId>aspectjrt</artifactId>
+    <version>1.5.3</version>
+</dependency>
+```
+
+导入aop包，这个一开始导入Spring包的时候就已经导入了，在此仅提示一下！
 
 ```xml
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
@@ -1262,7 +1271,7 @@ applicationContext.xml配置文件
 **方式2：使用自定义类来实现**
 
 ```xml
-    <!--方式2：使用原生Spring API接口-->
+    <!--方式2：使用原生Spring API接口，这里diy最好使用diyPointcut，因为这样更加规范，或者容易排查错误-->
     <bean id="diy" class="com.ly.diy.DiyPointcut"/>
     <aop:config>
         <!--自定义切面，ref 要引用的类-->
@@ -1279,3 +1288,93 @@ applicationContext.xml配置文件
 
 
 具体看代码
+
+**方法3：使用注解方式实现**
+
+```java
+package com.ly.diy;
+
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+
+/**
+ * 方式3：使用注解实现AOP
+ */
+
+// 标注这是一个切面
+@Aspect
+public class AnnotationPointcut {
+
+    @Before("execution(* com.ly.service.UserServiceImpl.*(..))")
+    public void before() {
+        System.out.println("====方法执行前-annotation====");
+    }
+
+    @After("execution(* com.ly.service.UserServiceImpl.*(..))")
+    public void after() {
+        System.out.println("====方法执行后-annotation====");
+    }
+
+    // 在环绕增强中，我门可以给定一个参数，代表我们要获取处理的切入点
+    @Around("execution(* com.ly.service.UserServiceImpl.*(..))")
+    public void around(ProceedingJoinPoint jp) throws Throwable {
+        // 下面三句是核心语句
+        System.out.println("环绕前");
+        Object proceed = jp.proceed(); // 执行方法
+        System.out.println("环绕后");
+
+        // 以下语句不是核心语句，可有可无
+        Signature signature = jp.getSignature();// 获得签名
+        System.out.println("signature：" + signature);
+        System.out.println(proceed);
+    }
+
+}
+```
+
+```xml
+    <!--方式3：使用注解-->
+    <bean id="annotationPointcut" class="com.ly.diy.AnnotationPointcut"/>
+    <!--开启注解的支持-->
+    <aop:aspectj-autoproxy/>
+```
+
+```xml
+	<!--方式3：使用注解-->
+    <bean id="annotationPointcut" class="com.ly.diy.AnnotationPointcut"/>
+    <!--开启注解的支持！
+    JDK（默认：proxy-target-class="false"）
+    cglib（proxy-target-class="true"）
+    结果都一样，只是底层实现不一致，一般这个参数不用-->
+    <aop:aspectj-autoproxy proxy-target-class="false"/>
+```
+
+```java
+import com.ly.service.UserService;
+import com.ly.service.UserServiceImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+/**
+ * liyang 2020-10-07
+ * 测试AOP的两种实现方式
+ */
+
+public class MyTest {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        // 动态代理代理的是接口：这是一个注意点，代理（Proxy）由Spring来帮我们搞定
+        UserService userService = context.getBean("userService", UserService.class);
+
+        userService.create();
+        System.out.println();
+        userService.delete();
+    }
+}
+```
+
