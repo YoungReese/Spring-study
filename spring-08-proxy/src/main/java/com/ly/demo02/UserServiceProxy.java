@@ -16,9 +16,9 @@ public class UserServiceProxy implements UserService {
         this.userService = userService;
     }
 
-    public void creat() {
-        log("creat");
-        userService.creat();
+    public void create() {
+        log("create");
+        userService.create();
     }
 
     public void retrieve() {

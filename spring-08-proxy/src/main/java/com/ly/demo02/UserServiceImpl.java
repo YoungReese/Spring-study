@@ -5,7 +5,7 @@ package com.ly.demo02;
  */
 public class UserServiceImpl implements UserService {
 
-    public void creat() {
+    public void create() {
         System.out.println("增加了一个用户");
     }
 
