@@ -121,7 +121,7 @@ p-namespace：依赖set
 
 c-namespace：依赖构造器
 
-![image-20201005235627925](../../../../Library/Application Support/typora-user-images/image-20201005235627925.png)
+![image-20201005235627925](Spring.assets/image-20201005235627925.png)
 
 
 
@@ -131,7 +131,7 @@ c-namespace：依赖构造器
 
 #### 6.4 bean的作用域
 
-![image-20201006000810670](../../../../Library/Application Support/typora-user-images/image-20201006000810670.png)
+![image-20201006000810670](Spring.assets/image-20201006000810670.png)
 
 
 
@@ -570,4 +570,158 @@ public @interface Resource {
 
 
 **@Nollable 字段标记了这个注解，说明这个字段也可以为null**
+
+
+
+### 8 使用注解开发
+
+在spring4之后，要使用注解开发，必需要保证aop包的导入
+
+![image-20201006155720336](Spring.assets/image-20201006155720336.png)
+
+使用注解需要导入context约束，增加注解
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--指定要扫描的包，这个包下的注解就会生效-->
+    <context:component-scan base-package="com.ly"/>
+    <!--开启注解的支持-->
+    <context:annotation-config/>
+
+</beans>
+```
+
+
+
+**建议：简单的使用注解快速注入，复杂的建议通过xml注入，这样结合二者优势使得代码更加清晰**
+
+
+
+1、bean注入
+
+```java
+// 以下注解等价于配置文件中的<bean id="user" class="com.ly.pojo.User"/>
+@Component
+public class User {
+    public String name = "liyang";
+}
+```
+
+
+
+2、属性如何注入
+
+```java
+package com.ly.pojo;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+// 以下注解等价于配置文件中的<bean id="user" class="com.ly.pojo.User"/>
+@Component
+public class User {
+    // 以下注解等价于配置文件中的<property name="name" value="liyang-annotation"/>
+    @Value("liyang-annotation")
+    public String name; // = "liyang";
+
+    // 除了在在段上加Value，还可以在set方法上加Value，都可以实现
+    // 以下注解等价于配置文件中的<property name="name" value="liyang-annotation-set"/>
+    @Value("liyang-annotation-set")
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+
+
+3、衍生的注解
+
+@Component有几个衍生的注解，我们在web开发中，会按照mvc三层架构分层！以下功能相同，仅仅为了一些区分
+
+*   dao【@Repository】
+*   service【@Service】
+*   controller【@Controller】
+
+这四个注解功能都是一样的，都是代表将某个类注册到Spring中，装配bean
+
+
+
+4、自动装配
+
+@Autowired，前文已经介绍，不再赘述！
+
+
+
+5、作用域
+
+@Scope
+
+```java
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Scope {
+    @AliasFor("scopeName")
+    String value() default "";
+
+    @AliasFor("value")
+    String scopeName() default "";
+
+    ScopedProxyMode proxyMode() default ScopedProxyMode.DEFAULT;
+}
+```
+
+```java
+@Component
+@Scope("singleton") // @Scope("prototype")
+public class User {
+    // 以下注解等价于配置文件中的<property name="name" value="liyang-annotation"/>
+    @Value("liyang-annotation")
+    public String name; // = "liyang";
+
+    // 除了在在段上加Value，还可以在set方法上加Value，都可以实现
+    // 以下注解等价于配置文件中的<property name="name" value="liyang-annotation-set"/>
+    @Value("liyang-annotation-set")
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+
+
+
+
+6、小结
+
+xml与注解：
+
+*   xml更加万能，适用于任何场合！维护简单方便
+*   spring注解中，不是自己的类使用不了，维护相对复杂！
+
+
+
+最佳实践：
+
+*   xml用来管理bean
+*   注解只完成属性的注入
+*   在使用过程中，注意必须让注解生效，开启注解的支持
+
+```xml
+	<!--指定要扫描的包，这个包下的注解就会生效-->
+    <context:component-scan base-package="com.ly"/>
+    <!--开启注解的支持-->
+    <context:annotation-config/>
+```
+
+
 
