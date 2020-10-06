@@ -1162,3 +1162,70 @@ java.lang.reflect.InvocationHandler
 
 ### 11 AOP
 
+#### 11.1、什么是AOP
+
+![image-20201007023516460](Spring.assets/image-20201007023516460.png)
+
+
+
+![image-20201007023446839](Spring.assets/image-20201007023446839.png)
+
+
+
+#### 11.2、 AOP在Spring中的作用
+
+![image-20201007024005442](Spring.assets/image-20201007024005442.png)
+
+
+
+![image-20201007024110013](Spring.assets/image-20201007024110013.png)
+
+
+
+
+
+![image-20201007024610726](Spring.assets/image-20201007024610726.png)
+
+
+
+#### 11.3 使用Spring实现AOP
+
+【重点】使用AOP织入，需要导入一个依赖包！
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>1.9.6</version>
+    <scope>runtime</scope>
+</dependency>
+```
+
+
+
+
+
+```xml
+<!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-aop</artifactId>
+    <version>5.2.9.RELEASE</version>
+</dependency>
+```
+
+
+
+
+
+```java
+Exception in thread "main" org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'userService' is expected to be of type 'com.ly.service.UserServiceImpl' but was actually of type 'com.sun.proxy.$Proxy4'
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:395)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1114)
+	at MyTest.main(MyTest.java:8)
+
+Process finished with exit code 1
+```
+
