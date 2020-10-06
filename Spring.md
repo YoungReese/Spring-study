@@ -855,3 +855,145 @@ public class MyTest {
 
 ![image-20201006184614981](Spring.assets/image-20201006184614981.png)
 
+
+
+
+
+### 10 代理模式
+
+在讲解AOP之前先回顾下代理模式！
+
+为什么在这里回顾代理模式，因为这就是SpringAOP的底层！【SpringAOP和SpringMVC】
+
+代理模式的分类：
+
+*   静态代理
+*   动该代理
+
+
+
+![image-20201006203138128](Spring.assets/image-20201006203138128.png)
+
+
+
+#### 10.1 静态代理
+
+角色分析
+
+*   抽象角色：一般会使用接口或者抽象类来解决
+*   真实角色：被代理的角色
+*   代理角色：代理真实角色，会额外做一些附属的操作
+*   客户：访问代理对象的人
+
+
+
+步骤：
+
+1、接口
+
+```java
+package com.ly.demo01;
+
+/**
+ * 租房接口
+ */
+public interface Rent {
+    void rent();
+}
+```
+
+
+
+2、真实角色
+
+```java
+package com.ly.demo01;
+
+/**
+ * 房东
+ */
+public class Landlord implements Rent {
+    public void rent() {
+        System.out.println("房东要出租房子！");
+    }
+}
+```
+
+
+
+3、代理角色
+
+```java
+package com.ly.demo01;
+
+/**
+ * 代理角色
+ */
+public class Proxy implements Rent {
+
+    private Landlord landlord; // 通过组合方式拿到房东
+
+    public Proxy() {
+    }
+
+    public Proxy(Landlord landlord) {
+        this.landlord = landlord;
+    }
+
+    public void rent() {
+        seeHouse();
+        landlord.rent();
+        signContract();
+        agencyFee();
+    }
+
+    // 看房子
+    public void seeHouse() {
+        System.out.println("中介带你看房子");
+    }
+
+    // 签合同
+    public void signContract() {
+        System.out.println("签租赁合同");
+    }
+
+    // 收中介费
+    public void agencyFee() {
+        System.out.println("收中介费");
+    }
+}
+```
+
+
+
+4、客户端访问代理角色
+
+```java
+package com.ly.demo01;
+
+/**
+ * 租房接口
+ */
+public interface Rent {
+    void rent();
+}
+```
+
+
+
+
+
+代理模式的好处：
+
+*   可以使真实角色的操作更加纯粹！不用去关注一些公共的业务
+*   公共的业务交给了代理角色！实现了业务的分工
+*   公共业务发生扩展的时候，方便集中进行处理
+
+
+
+缺点：一个真是角色就会产生一个代理角色，代码量会翻倍，开发效率会变低（解决方法：动态代理）
+
+
+
+### 11 AOP
+
