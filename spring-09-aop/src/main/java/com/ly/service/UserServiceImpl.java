@@ -1,5 +1,8 @@
 package com.ly.service;
 
+/**
+ * 被通知的对象就是目标（Target）
+ */
 public class UserServiceImpl implements UserService {
     public void create() {
         System.out.println("增加了一个用户");

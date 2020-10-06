@@ -1003,7 +1003,7 @@ public interface Rent {
 package com.ly.demo02;
 
 public interface UserService {
-    void creat();
+    void create();
     void retrieve();
     void update();
     void delete();
@@ -1014,11 +1014,11 @@ public interface UserService {
 package com.ly.demo02;
 
 /**
- * 真是角色
+ * 真实角色
  */
 public class UserServiceImpl implements UserService {
 
-    public void creat() {
+    public void create() {
         System.out.println("增加了一个用户");
     }
 
@@ -1055,9 +1055,9 @@ public class UserServiceProxy implements UserService {
         this.userService = userService;
     }
 
-    public void creat() {
-        log("creat");
-        userService.creat();
+    public void create() {
+        log("create");
+        userService.create();
     }
 
     public void retrieve() {
@@ -1097,7 +1097,7 @@ package com.ly.demo02;
 public class Client {
     public static void main(String[] args) {
         UserServiceImpl userService = new UserServiceImpl();
-        userService.creat();
+        userService.create();
         userService.retrieve();
         userService.update();
         userService.delete();
@@ -1106,7 +1106,7 @@ public class Client {
         // 使用代理类增加了一个打印日志的方法且不修改原有的代码
         UserServiceProxy userServiceProxy = new UserServiceProxy();
         userServiceProxy.setUserService(userService);
-        userServiceProxy.creat();
+        userServiceProxy.create();
         userServiceProxy.retrieve();
         userServiceProxy.update();
         userServiceProxy.delete();
@@ -1116,6 +1116,8 @@ public class Client {
 ```
 
 
+
+**以上代理是AOP的底层实现，AOP实现示意如下**
 
 ![image-20201006223350539](Spring.assets/image-20201006223350539.png)
 
@@ -1190,6 +1192,14 @@ java.lang.reflect.InvocationHandler
 
 #### 11.3 使用Spring实现AOP
 
+实现方式
+
+*   方式1：使用Spring的API接口【主要是SpringAPI接口实现，稍复杂，但是功能强大，因为可以获取被代理类的方法】
+*   方式2：使用自定义类来实现【主要是切面定义，简单】
+*   方式3：使用注解实现【】
+
+
+
 【重点】使用AOP织入，需要导入一个依赖包！
 
 ```xml
@@ -1202,9 +1212,7 @@ java.lang.reflect.InvocationHandler
 </dependency>
 ```
 
-
-
-
+导入aop包
 
 ```xml
 <!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
@@ -1215,17 +1223,59 @@ java.lang.reflect.InvocationHandler
 </dependency>
 ```
 
+applicationContext.xml配置文件
+
+**方式1：使用Spring的API接口**
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--配置aop: 需要导入aop的约束，见上面aop相关设置-->
+    
+    <!--注册bean-->
+    <bean id="userService" class="com.ly.service.UserServiceImpl"/>
+    <bean id="log" class="com.ly.log.Log"/>
+    <bean id="afterLog" class="com.ly.log.AfterLog"/>
 
 
+    <!--方式1：使用原生Spring API接口-->
+    <aop:config>
+        <!--切入点：expression: 表达式，execution(要执行的位置！* * * * *)-->
+        <aop:pointcut id="pointcut" expression="execution(* com.ly.service.UserServiceImpl.*(..))"/>
+        <!--执行环绕增加！-->
+        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
+        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>
+    </aop:config>
 
-
-```java
-Exception in thread "main" org.springframework.beans.factory.BeanNotOfRequiredTypeException: Bean named 'userService' is expected to be of type 'com.ly.service.UserServiceImpl' but was actually of type 'com.sun.proxy.$Proxy4'
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:395)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207)
-	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1114)
-	at MyTest.main(MyTest.java:8)
-
-Process finished with exit code 1
+</beans>
 ```
 
+
+
+**方式2：使用自定义类来实现**
+
+```xml
+    <!--方式2：使用原生Spring API接口-->
+    <bean id="diy" class="com.ly.diy.DiyPointcut"/>
+    <aop:config>
+        <!--自定义切面，ref 要引用的类-->
+        <aop:aspect ref="diy">
+            <!--切入点：expression: 表达式，execution(要执行的位置！* * * * *)-->
+            <aop:pointcut id="pointcut" expression="execution(* com.ly.service.UserServiceImpl.*(..))"/>
+            <!--通知-->
+            <aop:before method="before" pointcut-ref="pointcut"/>
+            <aop:after method="after" pointcut-ref="pointcut"/>
+        </aop:aspect>
+    </aop:config>
+```
+
+
+
+具体看代码
