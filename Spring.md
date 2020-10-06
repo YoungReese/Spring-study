@@ -728,7 +728,7 @@ xml与注解：
 
 ### 9 使用Java的方式配置【完全不使用xml文件实现注入】
 
-我们现在要完全不使用Spring的xml配置了，全权交给Java来做！
+我们现在要完全不使用Spring的xml配置了，全权交给Java来做！在SpringBoot中常见
 
 JavaConfig是Spring的一个子项目，在Spring4之后
 
