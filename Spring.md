@@ -1378,3 +1378,56 @@ public class MyTest {
 }
 ```
 
+
+
+
+
+### 12 整合Mybatis
+
+步骤：
+
+1、导入相关jar包
+
+*   junit
+*   mybatis
+*   mysql数据库
+*   Spring相关
+*   aop织入
+*   mybatis-spring
+
+2、编写配置文件
+
+3、测试
+
+
+
+
+
+#### 12.1 回忆mybatis
+
+1、编写实体类
+
+2、编写核心配置文件
+
+3、编写接口
+
+4、编写mapper.xml
+
+5、测试
+
+
+
+#### 12.2 Mybatis-spring
+
+1、编写数据源配置
+
+2、sqlSessionFactory
+
+3、sqlSessionTemplate
+
+4、需要给接口加实现类【增加的一个类】
+
+5、将自己写的实现类注入到spring中
+
+6、测试使用即可！
+
