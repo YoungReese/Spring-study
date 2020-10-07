@@ -1431,3 +1431,6 @@ public class MyTest {
 
 6、测试使用即可！
 
+
+
+【代码和整合实践等mybatis学完再更新！】
