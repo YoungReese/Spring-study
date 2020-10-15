@@ -1384,6 +1384,8 @@ public class MyTest {
 
 ### 12 整合Mybatis
 
+[官网](http://mybatis.org/spring/zh/index.html)
+
 步骤：
 
 1、导入相关jar包
@@ -1393,7 +1395,7 @@ public class MyTest {
 *   mysql数据库
 *   Spring相关
 *   aop织入
-*   mybatis-spring
+*   mybatis-spring【new】
 
 2、编写配置文件
 
@@ -1407,7 +1409,56 @@ public class MyTest {
 
 1、编写实体类
 
+```java
+package com.ly.pojo;
+
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class User {
+    private int id;
+    private String name;
+    private String pwd;
+}
+```
+
+
+
 2、编写核心配置文件
+
+```xml
+<configuration>
+    
+    <typeAliases>
+        <package name="com.ly.pojo"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+
+    <mappers>
+        <mapper class="com.ly.dao.UserMapper"/>
+    </mappers>
+
+</configuration>
+```
+
+
 
 3、编写接口
 
@@ -1434,3 +1485,29 @@ public class MyTest {
 
 
 【代码和整合实践等mybatis学完再更新！】
+
+
+
+能出现问题说明：Maven静态资源过滤问题
+
+```xml
+<resources>
+   <resource>
+       <directory>src/main/java</directory>
+       <includes>
+           <include>**/*.properties</include>
+           <include>**/*.xml</include>
+       </includes>
+       <filtering>false</filtering>
+   </resource>
+   <resource>
+       <directory>src/main/resources</directory>
+       <includes>
+           <include>**/*.properties</include>
+           <include>**/*.xml</include>
+       </includes>
+       <filtering>false</filtering>
+   </resource>
+</resources>
+```
+
