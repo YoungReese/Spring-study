@@ -5,6 +5,10 @@ import org.mybatis.spring.SqlSessionTemplate;
 
 import java.util.List;
 
+/**
+ * liyang 2020-10-16
+ * 使用方式1
+ */
 public class UserMapperImpl implements UserMapper {
 
     // 在原来，我们都使用sqlSession来执行，使用spring整合后，我们使用sqlSessionTemplate，本质一样，就相当于换个名字

@@ -28,9 +28,15 @@
 
     <!--sqlSessionTemplate就是我们使用的sqlSession-->
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-        <!--只能通过构造器注入，因为没有SqlSessionTemplate源码没有set方法-->
+        <!--方式1:只能通过构造器注入，因为没有SqlSessionTemplate源码没有set方法-->
         <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
 
+
+    <!--使用UserMapperImpl2中的方式，这里不需要注册sqlSession，所以在方式2下直接注释掉
+    上面的sqlSession会出现异常，因为在applicationContext.xml中注册方法1使用了sqlSession，
+    所以会报错，如果单纯测试UserMapperImpl2，也就是运行test2QueryUsers可以将这里的sqlSession
+    和applicationContext.xml中的UserMapperImpl全部注释掉就不会报错且正常运行了！
+    -->
 
 </beans>

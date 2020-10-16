@@ -14,4 +14,10 @@
     </bean>
 
 
+    <!--使用方式2，虽然属性不需要sqlSession，但是需要sqlSessionFactory-->
+    <bean id="userMapperImpl2" class="com.ly.dao.UserMapperImpl2">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    </bean>
+
+
 </beans>

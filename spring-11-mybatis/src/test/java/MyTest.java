@@ -34,4 +34,14 @@ public class MyTest {
         }
     }
 
+    @Test
+    public void test2QueryUsers() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        UserMapper userMapperImpl = context.getBean("userMapperImpl2", UserMapper.class);
+        List<User> users = userMapperImpl.queryUsers();
+        for (User user : users) {
+            System.out.println(user);
+        }
+    }
+
 }
