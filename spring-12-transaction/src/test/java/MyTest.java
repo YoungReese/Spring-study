@@ -18,6 +18,9 @@ import java.util.List;
  * 注意：不改也可以运行，只不过程序会帮助我们切换，且打印一条切换日志！
  *
  * update: 2020-10-16  spring第一次整合mybatis改造
+ * update: 2020-10-16  spring第二次整合mybatis改造
+ *
+ * 注意：提交代码的时候，P25漏掉了，写成了P26，P26写成了P27，P27在原来基础上加了-code
  *
  */
 public class MyTest {
