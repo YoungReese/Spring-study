@@ -27,4 +27,20 @@ public class UserMapperImpl extends SqlSessionDaoSupport implements UserMapper {
     public int deleteUserById(int id) {
         return getSqlSession().getMapper(UserMapper.class).deleteUserById(id);
     }
+
+
+    // 为了模拟事务创建的函数
+    @Override
+    public List<User> queryUsersInTransaction() {
+
+        User user = new User(8, "Jobs", "1955");
+        addUser(user);
+        deletesUserById(55);
+        return getSqlSession().getMapper(UserMapper.class).queryUsersInTransaction();
+    }
+
+    @Override
+    public int deletesUserById(int id) {
+        return getSqlSession().getMapper(UserMapper.class).deletesUserById(id);
+    }
 }

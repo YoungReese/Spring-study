@@ -48,5 +48,23 @@ public class MyTest {
         if (res > 0) System.out.println("删除成功！");
     }
 
+    /**
+     * liyang 2020-10-17
+     * 这里测试模拟事务，在插入中函数中嵌入删除，并且删除的sql语句delete改成deletes模拟失败，
+     * 观察在配置与不配置事务的情况下数据库数据。（注：这个测试注定有报错，因为deletes是错误的）
+     *
+     * 结论：有事务情况，数据不会被插入； （事务的回滚操作）
+     *      没有事务情况，数据会被插入。 （不存在回滚操作）
+     */
+    @Test
+    public void testQueryUsersInTransaction() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        UserMapper userMapperImpl = context.getBean("userMapperImpl", UserMapper.class);
+        List<User> users = userMapperImpl.queryUsersInTransaction();
+        for (User user : users) {
+            System.out.println(user);
+        }
+    }
+
 
 }
