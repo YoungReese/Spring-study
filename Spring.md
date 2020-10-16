@@ -1470,6 +1470,8 @@ public class User {
 
 #### 12.2 Mybatis-spring
 
+c3p0  dbcp   druid
+
 1、编写数据源配置
 
 2、sqlSessionFactory
