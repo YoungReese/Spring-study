@@ -7,7 +7,7 @@ public class UserServiceImpl implements UserService {
     // 通过组合在service层调用dao层
     private UserDao userDao;
 
-    // 利用set进行动态实现值得注入，这里类似于UserDao相关类的多态
+    // 利用set进行动态实现值的注入，这里类似于UserDao相关类的多态
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }

@@ -1,5 +1,7 @@
 import com.ly.pojo.User;
 import com.ly.pojo.UserAlias;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -7,25 +9,23 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * liyang 2020-10-05
  * ioc创建对象的方式，默认采用无参构造函数
- *
+ * <p>
  * 在配置文件中可以使用3种方法实现有参构造函数来创建
  * 1、根据下标赋值
  * 2、根据类型赋值
  * 3、根据name赋值
- *
+ * <p>
  * 总结：在配置文件加载的时候，容器中管理的对象就已经初始化了！
- *      当你需要相应的bean时，直接去getBean即可
- *
+ * 当你需要相应的bean时，直接去getBean即可
+ * <p>
  * 注意：使用一个总的application.context.xml，可以使用import将各个配置模块导入进来
- *
  */
 
 public class MyTest {
 
     public static void main(String[] args) {
-//        // 传统使用new方式
-//        User user = new User();
-
+        //        // 传统使用new方式
+        //        User user = new User();
 
 
         // 使用spring托管方式
@@ -57,5 +57,18 @@ public class MyTest {
         UserAlias userAlias3 = (UserAlias) context.getBean("userAlias3");
         userAlias3.show();
 
+    }
+
+    /**
+     * 随手测试下random()，和本项目无关
+     * 默认取值范围：double x in [0, 1)
+     */
+    @Test
+    public void testRandom() {
+        int CONSTANT = 10;
+        for (int i = 0; i < CONSTANT; i++) {
+            int num = (int) (Math.random() * 3);
+            System.out.println("num=" + num);
+        }
     }
 }

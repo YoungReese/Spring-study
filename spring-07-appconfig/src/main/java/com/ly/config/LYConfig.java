@@ -16,7 +16,7 @@ public class LYConfig {
     // 这里注册一个bean，相当于我们之前写的一个bean标签
     // 这个方法的名字，相当于bean标签中的id属性
     // 这个方法的返回值，就相当于bean标签中的class属性
-    @Bean
+    @Bean // 可以重新指定bean的id属性，比如改成user：@Bean(name="user")
     public User myUser() {
         return new User(); // 这个User对象就是要注入到bean的对象！
     }
